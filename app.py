@@ -7,7 +7,7 @@ from heart import Heart
 
 # Setup screen
 screen = Screen()
-screen.bgcolor("#1A1A1A")
+screen.bgpic("img/bg.gif")
 screen.setup(width=750, height=650)
 screen.title("SpaceInvaders")
 screen.tracer(0)
@@ -16,6 +16,15 @@ screen.addshape("img/heart.gif")
 screen.addshape("img/invader1.gif")
 screen.addshape("img/invader2.gif")
 screen.addshape("img/invader3.gif")
+
+# Setup Pen for writing messages on screen
+pen = Turtle()
+pen.penup()
+pen.hideturtle()
+pen.goto(0,-100)
+pen.color("#15FF00")
+
+pen.write("Press ↑ to start\nPress ← and → to move\nPress Space to shoot!", align="center", font=("Courier", 18, "bold"))
 
 # ==== SHIP ====
 ship = Ship(position=(0,-250))
@@ -141,7 +150,15 @@ def game_loop():
     global game_started, hearts, hearts_list   
     if game_started:
 
+        pen.clear()
+
         move_invaders()
+
+        # Ship move
+        if right_pressed:
+            ship.move(direction=1)
+        if left_pressed:
+            ship.move(direction=-1)
 
         # Invaders randomly shoot
         if randint(1, 20) == 1:
@@ -165,6 +182,9 @@ def game_loop():
                     lost_heart.hideturtle()
                     lost_heart.goto(1000, 1000)
                 else:
+                    # LOSE and reset the game
+                    pen.write("Game Over!\nPress ↑ to Play again", align="center", font=("Courier", 18, "bold"))
+                    create_invaders()
                     reset_hearts()
                 
             # Bullet misses
@@ -184,11 +204,19 @@ def game_loop():
                 bullet.hideturtle()
                 bullets.remove(bullet)
 
-        if right_pressed:
-            ship.move(direction=1)
-        if left_pressed:
-            ship.move(direction=-1)
-
+        # Win
+        if len(invaders) == 0:
+            game_started = False
+            for bullet in bullets[:]:
+                bullets.remove(bullet)
+                bullet.reset()
+            for bullet in enemy_bullets[:]:
+                enemy_bullets.remove(bullet)
+                bullet.reset()
+            ship.reset()
+            pen.write("You Won!\nPress ↑ to Play again", align="center", font=("Courier", 18, "bold"))
+            create_invaders()
+            reset_hearts()
 
 
     screen.update()
