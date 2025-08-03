@@ -16,3 +16,6 @@ class Invader(Turtle):
     def drop_down(self, distance=5):
         new_y = self.ycor() - distance
         self.goto(self.xcor(), new_y)
+
+    def die(self):
+        self.goto((5000,5000))

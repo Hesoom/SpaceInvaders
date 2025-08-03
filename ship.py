@@ -6,8 +6,7 @@ class Ship(Turtle):
         self.start_position = position
         self.penup()
         self.goto(self.start_position)
-        self.shape("square")
-        self.color("white")
+        self.shape("img/ship.gif")        
         self.shapesize(stretch_wid=1, stretch_len=2)
         
     def reset(self):
